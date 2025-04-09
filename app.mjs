@@ -1,5 +1,7 @@
 import Game from "./models/Game.mjs";
 
+let games = [];
+
 function saveGameToLocalStorage(game) {
   const gameKey = game.title.replace(/\s+/g, "_");
 
@@ -24,11 +26,45 @@ function outputTheGameAsJSON() {
   console.log(JSON.stringify(games, null, 2));
 }
 
-function gamesImportedFromJSON(jsonData) {
-  const games = JSON.parse(jsonData);
+function importFilesFromGame(event) {
+  const file = event.target.files[0];
 
-  games.forEach((game) => {
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    const fileContent = e.target.result;
+    const importedGames = JSON.parse(fileContent);
+
+    importedGames.forEach((gameData) => {
+      const game = new Game(gameData);
+
+      saveGameToLocalStorage(game);
+
+      games.push(game);
+    });
+
+    console.log("The games imported from files:", games);
+    outputTheGameAsJSON();
+  };
+
+  reader.readAsText(file);
+}
+
+const importInput = document.getElementById("importSource");
+importInput.addEventListener("change", importFilesFromGame);
+
+games = getAllGamesFromLocalStorage();
+console.log("Games loaded from the local storage:", games);
+outputTheGameAsJSON();
+
+function gamesImportedFromJSON(jsonData) {
+  const importedGames = JSON.parse(jsonData);
+
+  importedGames.forEach((game) => {
     saveGameToLocalStorage(game);
+    games.push(game);
   });
 }
 
