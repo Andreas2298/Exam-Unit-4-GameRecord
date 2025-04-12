@@ -9,19 +9,21 @@ function saveGameToLocalStorage(game) {
 }
 
 function getAllGamesFromLocalStorage() {
-  const games = [];
+  const storedGames = [];
 
   for (let i = 0; i < localStorage.length; i++) {
     const gameKey = localStorage.key(i);
 
     const gameData = JSON.parse(localStorage.getItem(gameKey));
-    games.push(gameData);
+    storedGames.push(gameData);
   }
-  return games;
+  return storedGames;
 }
 
 function outputTheGameAsJSON() {
   const games = getAllGamesFromLocalStorage();
+
+  renderGameRecords();
 
   console.log(JSON.stringify(games, null, 2));
 }
@@ -66,6 +68,61 @@ function gamesImportedFromJSON(jsonData) {
     saveGameToLocalStorage(game);
     games.push(game);
   });
+}
+
+function renderGameRecords() {
+  const gamesListContainer = document.getElementById("gameList");
+  gamesListContainer.innerHTML = "";
+
+  const games = getAllGamesFromLocalStorage();
+  games.forEach((game) => {
+    const gameDiv = document.createElement("div");
+
+    gameDiv.classList.add("game-record");
+
+    const title = document.createElement("h3");
+    title.textContent = game.title;
+
+    gameDiv.appendChild(title);
+
+    const rangeInput = document.createElement("input");
+    rangeInput.type = "range";
+    rangeInput.min = 0;
+    rangeInput.max = 100;
+    rangeInput.value = game.playCount || 0;
+    gameDiv.appendChild(rangeInput);
+
+    const button = document.createElement("button");
+    button.textContent = "Details";
+    gameDiv.appendChild(button);
+
+    gamesListContainer.appendChild(gameDiv);
+  });
+}
+
+games = getAllGamesFromLocalStorage();
+renderGameRecords();
+outputTheGameAsJSON();
+
+console.log("The games was successfully loaded from the localStorage:", games);
+
+const exportButton = document.getElementById("exportButton");
+
+exportButton.addEventListener("click", exportGamesToFile);
+
+function exportGamesToFile() {
+  const games = getAllGamesFromLocalStorage();
+  const blob = new Blob([JSON.stringify(games, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "games_export.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
 }
 
 const gameTest = new Game({
