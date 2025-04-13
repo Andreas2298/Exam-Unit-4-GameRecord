@@ -1,4 +1,4 @@
-Progress and thoughts summary step 1-11
+Progress and thoughts summary step 1-6
 
 Step 1:
 
@@ -34,8 +34,16 @@ const gameKey = localStorage.key(i);
 return games;
 }
 
-To test that everything was working properly, I created a test game object and saved it manually in the localStorage. Then the getGameFromLocalStorage was called and the output was logged using a helper function called outputGameAsJSON(). To allow for for external files or test data to be imported into the application, a function called gamesImportedFromJSON(jsonData). This function took a JSON string that represented multiple games, parsed it and then saved all of them individually by using the save function that I already created. Instead of storing all the games as an array, each game was saved as an individual key-value pair in the localStorage. Each game was assigned it's own key that was unique based on their titles.
+To test that everything was working properly, I created a test game object and saved it manually in the localStorage. Then the getGameFromLocalStorage was called and the output was logged using a helper function called outputGameAsJSON(). To allow for for external files or test data to be imported into the application, a function called gamesImportedFromJSON(jsonData) was created. This function took a JSON string that represented multiple games, parsed it and then saved all of them individually by using the save function that I already created. Instead of storing all the games as an array, each game was saved as an individual key-value pair in the localStorage. Each game was assigned it's own key that was unique based on their titles.
 
 Step 4:
 
 In this step, I implemented a functionality where the user would be allowed to import a .json file that contained multiple games because this would be useful for restoring the previously exported game data. In order to achieve this, I added an element input type = "file" with the id = "importSource" in the index.html file. In the app.mjs file I then created new function called importFilesFromGame(event) that would be triggered when a file was selected. It uses a fileReader API to read the contents of that file. Once the files was read, the function parsed the JSON string into game objects where it iterated through each one and created a new game instance for each, then saved in localStorage using the function I made in step 3, the saveGameToLocalStorage() function. I also created a global array called games and at the top of the app.mjs file as that array served as an in-memory list of all the games that were currently known to the application.
+
+Step 5:
+
+In this step, a functionality was added to have each of the games in the localStorage rendered and to allow for interaction with UI elements. A game list renderer was then added into each of the games in the localStorage that was displayed in the #gameList container with the key information. A slider for playCount was added for each game to reflect and have the playCount property updated. A button labeled as "Details" were also added next to each game record to be able to view the full game info. An export button was added to allow for having the current game records exported to a JSON file. A setup for DOM was also added to the index.html file. The games should also now rendered from the loaded localStorage and rendered when the page is loading as all the updates to playCount should be saved automatically.
+
+Step 6:
+
+In this step, the interactive UI elements for each of the games and then especially for playCount and playRating were added to have the data updated both in the in-memory and in the localStorage. A two-way data binding was then set up between the implemented sliders and properties of the games. playCount was updated in the index.html file using an input type = "range". personalRating was then updated using a second slider and a label was then displayed. When the sliders are adjusted, they should now get updated in the object relevant to the object of the games. Also, when then sliders are adjusted, they should be saved into the localStorage using the saveToLocalStorage() function. The function renderGameRecords() were adjusted to include the label that makes sure to update when the slider is moved and have an automatic re-saving and rendering of data.
