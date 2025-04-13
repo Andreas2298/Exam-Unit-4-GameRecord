@@ -92,6 +92,31 @@ function renderGameRecords() {
     rangeInput.value = game.playCount || 0;
     gameDiv.appendChild(rangeInput);
 
+    rangeInput.addEventListener("input", (e) => {
+      game.playCount = parseInt(e.target.value, 10);
+      saveGameToLocalStorage(game);
+      outputTheGameAsJSON();
+    });
+
+    const labelForRating = document.createElement("label");
+    labelForRating.textContent = `Rating: ${game.personalRating || 0}`;
+    gameDiv.appendChild(labelForRating);
+
+    const inputForRating = document.createElement("input");
+    inputForRating.type = "range";
+    inputForRating.min = 0;
+    inputForRating.max = 10;
+    inputForRating.step = 1;
+    inputForRating.value = game.personalRating || 0;
+    gameDiv.appendChild(inputForRating);
+
+    inputForRating.addEventListener("input", (e) => {
+      game.personalRating = parseInt(e.target.value, 10);
+      labelForRating.textContent = `Rating: ${game.personalRating}`;
+      saveGameToLocalStorage(game);
+      outputTheGameAsJSON();
+    });
+
     const button = document.createElement("button");
     button.textContent = "Details";
     gameDiv.appendChild(button);
